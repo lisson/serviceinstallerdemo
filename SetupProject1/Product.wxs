@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="b1632a94-bba4-4307-a81a-734074287606" Name="SetupProject1" Language="1033" Version="1.0.0.0" Manufacturer="WixInstaller" UpgradeCode="5f14ef1c-9a07-4326-a988-3cabc0e41963">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Platform="x64"/>
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="SetupProject1" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFiles64Folder">
+				<Directory Id="INSTALLFOLDER" Name="WindowsService1" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="ServiceComponent" Win64="yes">
+        <File Source="$(var.WindowsService1.TargetPath)" />         
+        <ServiceInstall
+              Id="ServiceInstaller"
+              Type="ownProcess"
+              Name="JobService"
+              DisplayName="TestService1"
+              Description="Service installed by Wix"
+              Start="demand"
+              Account="[ACCOUNT]"
+              Password="[PASSWORD]"
+              ErrorControl="normal"
+              />
+        <ServiceControl Id="StartService" Start="install" Stop="both" Remove="uninstall" Name="JobService" Wait="yes" />
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
